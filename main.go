@@ -3,9 +3,11 @@ package main
 import (
 	"errors"
 	"fmt"
+	"os"
 )
 
 type Graph struct {
+	ants     int
 	Vertices []*Vertix
 }
 type Vertix struct {
@@ -23,7 +25,6 @@ func (g *Graph) addVertix(key int) error {
 }
 
 func (g *Graph) addConnection(from, to int) {
-
 	Vfrom, err := g.getVertix(from)
 	if err != nil {
 		fmt.Println(err)
@@ -35,7 +36,7 @@ func (g *Graph) addConnection(from, to int) {
 		return
 	}
 	Vfrom.Connections = append(Vfrom.Connections, Vto)
-	Vto.Connections = append(Vfrom.Connections, Vfrom)
+	Vto.Connections = append(Vto.Connections, Vfrom)
 }
 
 func (g *Graph) getVertix(key int) (*Vertix, error) {
@@ -57,27 +58,57 @@ func (g *Graph) contains(key int) bool {
 }
 
 func (g Graph) print() {
+	fmt.Println("Vertices:")
 	for _, v := range g.Vertices {
 		fmt.Printf("Vertix key: %d\n", v.key)
+	}
+
+	fmt.Println("Connections:")
+	for _, v := range g.Vertices {
+		for _, c := range v.Connections {
+			if v.key < c.key {
+				fmt.Printf("%d--%d\n", v.key, c.key)
+			}
+		}
 	}
 }
 
 // TODO: test vertices connections
 // TODO: print connections
 func main() {
-	graph := Graph{}
-
-	for i := 0; i < 5; i++ {
-		err := graph.addVertix(i)
-		if err != nil {
-			fmt.Println(err)
-		}
+	var file string
+	args := os.Args
+	if len(args) > 2 {
+		fmt.Println("Usage: go run . [ARG]")
+		return
+	} else {
+		file = fmt.Sprintf("./examples/%s", args[1])
+		fmt.Printf("file directory: %s\n", file)
 	}
-
-	err := graph.addVertix(0)
+	reader, err := os.ReadFile(file)
 	if err != nil {
 		fmt.Println(err)
+		return
 	}
+	fmt.Printf("%s", string(reader))
 
-	graph.print()
+	// graph := Graph{}
+	//
+	// for i := 0; i <= 5; i++ {
+	// 	err := graph.addVertix(i)
+	// 	if err != nil {
+	// 		fmt.Println(err)
+	// 	}
+	// }
+	//
+	// graph.addConnection(0, 1)
+	// graph.addConnection(2, 1)
+	// graph.addConnection(4, 5)
+	//
+	// for _, v := range graph.Vertices {
+	// 	for _, c := range v.Connections {
+	// 		fmt.Printf("Vertix %d is connected to Vertix %d\n", v.key, c.key)
+	// 	}
+	// }
+	// graph.print()
 }
