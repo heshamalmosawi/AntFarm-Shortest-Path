@@ -65,7 +65,7 @@ func (g *Graph) Print() {
 		fmt.Print("\tIts connections: ")
 		for _, connection := range v.Connections {
 			fmt.Print(connection.key, " ")
-		}	
+		}
 		fmt.Println()
 	}
 }
