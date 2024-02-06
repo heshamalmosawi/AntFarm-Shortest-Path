@@ -8,7 +8,6 @@ import (
 	"strings"
 )
 
-
 func main() {
 	if len(os.Args) != 2 {
 		log.Fatal("Incorrect format. \nUsage: go run . <filename>")
@@ -22,7 +21,7 @@ func main() {
 	pkg.ProcessData(contentArr)
 }
 
-func testWork(){
+func testWork() {
 	graph := pkg.Graph{}
 
 	for i := 0; i < 5; i++ {
@@ -32,7 +31,7 @@ func testWork(){
 		}
 	}
 
-	graph.AddConnection("3","4")
+	graph.AddConnection("3", "4")
 
 	// err := graph.AddVertix(0)
 	// if err != nil {

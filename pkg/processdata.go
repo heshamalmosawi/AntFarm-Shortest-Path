@@ -7,18 +7,22 @@ import (
 	"strings"
 )
 
-func ProcessData(data []string){
+func ProcessData(data []string) {
 	var start, numAnts int
 	var i = 0
-	graph := Graph{}
+	// graph := Graph{}
 
-	for (i<len(data)){
-		if data[i][0] == '#' && data[i][1] != '#'{
+	for i < len(data) {
+		if data[i][0] == '#' && data[i][1] != '#' {
 			i++
 			continue
 		}
-		if data[i] == "##start"{
-			for j := 0; j < i; j++{
+		if data[i] == "##start" {
+			if data[i+1][:2] == "##end" {
+				log.Fatal("ERROR: Invalid data format. Start and end points are the same room.")
+			}
+			for j := 0; j < i; j++ {
+				// Number of ants is always a number, so if no error, we found a number
 				num, err := strconv.Atoi(data[j])
 				if err == nil && numAnts != 0 {
 					log.Fatal("ERROR: Invalid data format. Number of ants should be mentioned once before the start.")
@@ -26,36 +30,39 @@ func ProcessData(data []string){
 					numAnts = num
 				}
 			}
-			if numAnts == 0{
+			if numAnts == 0 {
 				log.Fatal("ERROR: Ants not found or too few! Please write an appropriate number of ants.")
 			}
-			for j := i ; i< len(data); i++{
+
+/* ----------------------------------------------------------------------------------- */
+			for j := i; i < len(data); i++ {
 				temp, err := strconv.Atoi(strings.Split(data[i], " ")[0])
 				if err == nil {
 					start = temp
 					break
 				} else {
-					if data[j] == "##end"{
+					if data[j] == "##end" {
 						log.Fatal("ERROR: Invalid data format. Missing rooms")
 					} else if data[j][0] == '#' && data[j][1] != '#' {
 						continue
 					}
 				}
 			}
-		} else if data[i] == "##end"{
-						// getEnd, check no more rooms at the end
+		} else if data[i] == "##end" {
+			// getEnd, check no more rooms at the end
 			break
-		} else if data[i][0] == '#' && data[i][1] != '#'{
+		} else if data[i][0] == '#' && data[i][1] != '#' {
 			//error
 		} else {
-			key, err := strconv.Atoi(strings.Split(data[i], " ")[0])
-			if err != nil{
-				log.Fatal("Invalid Error!", err)
-			}
-			graph.AddVertix(key)
+			// key, err := strconv.Atoi(strings.Split(data[i], " ")[0])
+			// if err != nil{
+			// 	log.Fatal("Invalid Error!", err)
+			// }
+			// graph.AddVertix(key)
 		}
-		
+
 		i++
 	}
-	fmt.Println("Number of ants:", numAnts,"\tStart room:", start)
+	fmt.Println("Number of ants:", numAnts, "\tStart room:", start)
+	Graph.Print()
 }
