@@ -64,5 +64,5 @@ func ProcessData(data []string) {
 		i++
 	}
 	fmt.Println("Number of ants:", numAnts, "\tStart room:", start)
-	Graph.Print()
+	// graph.Print()
 }
