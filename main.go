@@ -1,10 +1,9 @@
 package main
 
 import (
-	"lemin/pkg"
+	lemin "lemin/lemin"
 	"log"
 	"os"
-	"strconv"
 	"strings"
 )
 
@@ -18,25 +17,5 @@ func main() {
 		log.Fatal(err)
 	}
 	contentArr := strings.Split(string(file), "\n")
-	pkg.ProcessData(contentArr)
-}
-
-func testWork() {
-	graph := pkg.Graph{}
-
-	for i := 0; i < 5; i++ {
-		err := graph.AddVertix(strconv.Itoa(i))
-		if err != nil {
-			log.Fatal("1", err)
-		}
-	}
-
-	graph.AddConnection("3", "4")
-
-	// err := graph.AddVertix(0)
-	// if err != nil {
-	// 	log.Fatal("2", err)
-	// }
-
-	graph.Print()
+	lemin.ProcessData(contentArr)
 }
