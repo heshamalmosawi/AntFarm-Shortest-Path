@@ -1,5 +1,5 @@
 package pkg
-
+// This file contains all data processing functions that occur in the bigenning of the program.
 import (
 	"fmt"
 	"log"
@@ -7,9 +7,11 @@ import (
 	"strings"
 )
 
+var Farm = Graph{} // Global variable for easy use
+
+/* This function processes all data in data file, and initializes all the data into the farm graph */
 func ProcessData(d []string) {
 	var (
-		graph       = Graph{}
 		foundStart  = false
 		foundEnd    = false
 		foundAnts   = false
@@ -24,7 +26,7 @@ func ProcessData(d []string) {
 		if err == nil && foundAnts {
 			log.Fatal("ERROR: Invalid data format. Number of ants should be mentioned only once before the start.")
 		} else if err == nil {
-			graph.ants = ant
+			Farm.ants = ant
 			foundAnts = true
 			indexOfAnts = i
 			continue
@@ -69,7 +71,7 @@ func ProcessData(d []string) {
 						log.Fatal("ERROR: Invalid data format. start command found but start room not found.")
 					}
 					isValidRoom(d, start) //Checking room format
-					graph.startRoom = strings.Split(d[start], " ")[0]
+					Farm.startRoom = strings.Split(d[start], " ")[0]
 					continue
 				}
 
@@ -85,7 +87,7 @@ func ProcessData(d []string) {
 					log.Fatal("ERROR: Invalid data format. End command found but end room not found.")
 				}
 				isValidRoom(d, end) // Checking room format
-				graph.endRoom = strings.Split(d[end], " ")[0]
+				Farm.endRoom = strings.Split(d[end], " ")[0]
 				continue
 			} else {
 				continue // According to the question requirements, all unknown commands should be ignored (in example: ##STOP, ##Hello etc.)
@@ -98,19 +100,25 @@ func ProcessData(d []string) {
 		splitLine := strings.Split(line, " ")
 		if len(splitLine) > 1 { // room
 			isValidRoom(d, i)
-			err := graph.Addvertex(splitLine[0])
+			err := Farm.Addvertex(splitLine[0], splitLine[1], splitLine[2])
 			if err != nil {
 				log.Fatal(err)
 			}
 		} else if i != indexOfAnts && splitLine[0] != "" { // connection
 			//split on '-' to get from and to connections
 			splitCon := strings.Split(strings.Join(splitLine, ""), "-")
+			if len(splitCon) != 2 {
+				log.Fatal("ERROR: Invalid data format. Connection should be between two rooms and two rooms only.")
+			}
 			from, to := splitCon[0], splitCon[1]
+			if from == to {
+				log.Fatal("ERROR: Invalid data. A room must not be connected to itself.")
+			}
 			//create vertex connection
-			graph.AddConnection(from, to)
+			Farm.AddConnection(from, to)
 		}
 	}
-	graph.Print()
+	Farm.Print()
 }
 
 /* To find the rooms after ##start or ##end (useful when comments are in the way)*/
@@ -133,7 +141,7 @@ func findNextNonComment(arr []string, start int) int {
 	return -1
 }
 
-/* This function checks if room format is: <room name> <x coordinate> <y coordinate>*/
+/* This function checks if room format is: <room name> <x coordinate> <y coordinate> */
 func isValidRoom(arr []string, index int) {
 	temp := strings.Split(arr[index], " ")
 	if len(temp) != 3 {
@@ -154,63 +162,13 @@ func isValidRoom(arr []string, index int) {
 	}
 }
 
-// func ProcessData(data []string) {
-// 	var start, numAnts int
-// 	var i = 0
-// 	// graph := Graph{}
-//
-// 	for i < len(data) {
-// 		// ignore comments
-// 		if data[i][0] == '#' && data[i][1] != '#' {
-// 			i++
-// 			continue
-// 		}
-// 		if data[i] == "##start" {
-// 			if data[i+1][:2] == "##end" {
-// 				log.Fatal("ERROR: Invalid data format. Start and end points are the same room.")
-// 			}
-// 			for j := 0; j < i; j++ {
-// 				// Number of ants is always a number, so if no error, we found a number
-// 				num, err := strconv.Atoi(data[j])
-// 				if err == nil && numAnts != 0 {
-// 					log.Fatal("ERROR: Invalid data format. Number of ants should be mentioned once before the start.")
-// 				} else if err == nil {
-// 					numAnts = num
-// 				}
-// 			}
-// 			if numAnts == 0 {
-// 				log.Fatal("ERROR: Ants not found or too few! Please write an appropriate number of ants.")
-// 			}
-//
-// 			/* ----------------------------------------------------------------------------------- */
-// 			for j := i; i < len(data); i++ {
-// 				temp, err := strconv.Atoi(strings.Split(data[i], " ")[0])
-// 				if err == nil {
-// 					start = temp
-// 					break
-// 				} else {
-// 					if data[j] == "##end" {
-// 						log.Fatal("ERROR: Invalid data format. Missing rooms")
-// 					} else if data[j][0] == '#' && data[j][1] != '#' {
-// 						continue
-// 					}
-// 				}
-// 			}
-// 		} else if data[i] == "##end" {
-// 			// getEnd, check no more rooms at the end
-// 			break
-// 		} else if data[i][0] == '#' && data[i][1] != '#' {
-// 			//error
-// 		} else {
-// 			// key, err := strconv.Atoi(strings.Split(data[i], " ")[0])
-// 			// if err != nil{
-// 			// 	log.Fatal("Invalid Error!", err)
-// 			// }
-// 			// graph.Addvertex(key)
-// 		}
-//
-// 		i++
-// 	}
-// 	fmt.Println("Number of ants:", numAnts, "\tStart room:", start)
-// 	// graph.Print()
-// }
+/* This functions throws an error if two rooms have the same exact coordinates */ 
+func (g *Graph) ValidCoord(){
+	for _, elem := range g.Vertices{
+		for _, elem2 := range g.Vertices{
+			if elem.key != elem2.key && elem.coord_x == elem2.coord_x && elem.coord_y == elem2.coord_y{
+				log.Fatalf("ERROR: Invalid data. Two or more vertices have matching coordinates \n[%v and %v]", elem.key, elem2.key)
+			}
+		}
+	}
+}
