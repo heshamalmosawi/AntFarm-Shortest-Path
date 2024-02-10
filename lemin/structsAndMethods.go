@@ -15,24 +15,26 @@ type Graph struct {
 }
 type vertex struct {
 	key         string
+	coord_x		string
+	coord_y		string
 	Connections []*vertex
 }
 
-func (g *Graph) Addvertex(key string) error {
+func (g *Graph) Addvertex(key string, x,y string) error {
 	if g.Contains(key) {
 		err := fmt.Sprintf("vertex %s already exists", key)
 		return errors.New(err)
 	}
-	g.Vertices = append(g.Vertices, &vertex{key: key})
+	g.Vertices = append(g.Vertices, &vertex{key: key, coord_x: x, coord_y: y})
 	return nil
 }
 
 func (g *Graph) AddConnection(from, to string) {
-	Vfrom, err := g.getvertex(from)
+	Vfrom, err := g.GetVertex(from)
 	if err != nil {
 		log.Fatal(err)
 	}
-	Vto, err := g.getvertex(to)
+	Vto, err := g.GetVertex(to)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -43,7 +45,7 @@ func (g *Graph) AddConnection(from, to string) {
 	Vto.Connections = append(Vto.Connections, Vfrom)
 }
 
-func (g *Graph) getvertex(key string) (*vertex, error) {
+func (g *Graph) GetVertex(key string) (*vertex, error) {
 	for _, v := range g.Vertices {
 		if v.key == key {
 			return v, nil
