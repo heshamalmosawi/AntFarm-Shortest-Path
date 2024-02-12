@@ -1,4 +1,5 @@
 package pkg
+
 // This file contains all data processing functions that occur in the bigenning of the program.
 import (
 	"fmt"
@@ -162,13 +163,14 @@ func isValidRoom(arr []string, index int) {
 	}
 }
 
-/* This functions throws an error if two rooms have the same exact coordinates */ 
-func (g *Graph) ValidCoord(){
-	for _, elem := range g.Vertices{
-		for _, elem2 := range g.Vertices{
-			if elem.key != elem2.key && elem.coord_x == elem2.coord_x && elem.coord_y == elem2.coord_y{
+/* This functions throws an error if two rooms have the same exact coordinates */
+func (g *Graph) ValidCoord() {
+	for _, elem := range g.Vertices {
+		for _, elem2 := range g.Vertices {
+			if elem.key != elem2.key && elem.coord_x == elem2.coord_x && elem.coord_y == elem2.coord_y {
 				log.Fatalf("ERROR: Invalid data. Two or more vertices have matching coordinates \n[%v and %v]", elem.key, elem2.key)
 			}
 		}
 	}
 }
+
