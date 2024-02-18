@@ -1,4 +1,4 @@
-package pkg
+package lemin
 
 import (
 	"errors"
@@ -15,12 +15,12 @@ type Graph struct {
 }
 type vertex struct {
 	key         string
-	coord_x		string
-	coord_y		string
+	coord_x     string
+	coord_y     string
 	Connections []*vertex
 }
 
-func (g *Graph) Addvertex(key string, x,y string) error {
+func (g *Graph) Addvertex(key string, x, y string) error {
 	if g.Contains(key) {
 		err := fmt.Sprintf("vertex %s already exists", key)
 		return errors.New(err)

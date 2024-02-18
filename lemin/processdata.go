@@ -1,8 +1,7 @@
-package pkg
+package lemin
 
 // This file contains all data processing functions that occur in the bigenning of the program.
 import (
-	"fmt"
 	"log"
 	"strconv"
 	"strings"
@@ -67,11 +66,11 @@ func ProcessData(d []string) {
 					log.Fatal("ERROR: Start and end are the same room") // error start and end are the same room
 				} else {
 					// add start room
-					start := findNextNonComment(d, i)
+					start := FindNextNonComment(d, i)
 					if start == -1 {
 						log.Fatal("ERROR: Invalid data format. start command found but start room not found.")
 					}
-					isValidRoom(d, start) //Checking room format
+					IsValidRoom(d, start) //Checking room format
 					Farm.startRoom = strings.Split(d[start], " ")[0]
 					continue
 				}
@@ -83,11 +82,11 @@ func ProcessData(d []string) {
 					foundEnd = true
 				}
 				// add end room
-				end := findNextNonComment(d, i)
+				end := FindNextNonComment(d, i)
 				if end == -1 {
 					log.Fatal("ERROR: Invalid data format. End command found but end room not found.")
 				}
-				isValidRoom(d, end) // Checking room format
+				IsValidRoom(d, end) // Checking room format
 				Farm.endRoom = strings.Split(d[end], " ")[0]
 				continue
 			} else {
@@ -100,7 +99,7 @@ func ProcessData(d []string) {
 		// else if len(splitline) = 1 and not empty, line is connection
 		splitLine := strings.Split(line, " ")
 		if len(splitLine) > 1 { // room
-			isValidRoom(d, i)
+			IsValidRoom(d, i)
 			err := Farm.Addvertex(splitLine[0], splitLine[1], splitLine[2])
 			if err != nil {
 				log.Fatal(err)
@@ -121,56 +120,3 @@ func ProcessData(d []string) {
 	}
 	Farm.Print()
 }
-
-/* To find the rooms after ##start or ##end (useful when comments are in the way)*/
-func findNextNonComment(arr []string, start int) int {
-	if start > len(arr) {
-		fmt.Println("Error Handling just in case, although im not sure if this will ever activate.")
-	}
-	for i := start; i < len(arr); i++ {
-		if len(arr) < 2 && i != len(arr)-1 {
-			log.Fatal("ERROR: Invalid data format. The only possible empty line should be the last line.")
-		} else if len(arr) > 2 {
-			if len(arr[i]) == 0 {
-				log.Fatal("ERROR: Invalid data format. Unexpected empty line found.")
-			}
-			if arr[i][0] != '#' {
-				return i
-			}
-		}
-	}
-	return -1
-}
-
-/* This function checks if room format is: <room name> <x coordinate> <y coordinate> */
-func isValidRoom(arr []string, index int) {
-	temp := strings.Split(arr[index], " ")
-	if len(temp) != 3 {
-		log.Fatal("ERROR: Invalid room format. Correct usage: <room_name> <coor_x> <coord_y>.")
-	}
-	if strings.ToLower(temp[0])[0] == 'l' {
-		log.Fatal("ERROR: Invalid data format. A room will never start with the letter 'L'.")
-	}
-	for _, elem := range temp[1] {
-		if elem < '0' || elem > '9' {
-			log.Fatal("ERROR: Invalid data format. Non-numeric value in coordinates found.")
-		}
-	}
-	for _, elem := range temp[2] {
-		if elem < '0' || elem > '9' {
-			log.Fatal("ERROR: Invalid data format. Non-numeric value in coordinates found")
-		}
-	}
-}
-
-/* This functions throws an error if two rooms have the same exact coordinates */
-func (g *Graph) ValidCoord() {
-	for _, elem := range g.Vertices {
-		for _, elem2 := range g.Vertices {
-			if elem.key != elem2.key && elem.coord_x == elem2.coord_x && elem.coord_y == elem2.coord_y {
-				log.Fatalf("ERROR: Invalid data. Two or more vertices have matching coordinates \n[%v and %v]", elem.key, elem2.key)
-			}
-		}
-	}
-}
-
