@@ -22,7 +22,6 @@ func (g *Graph) PathFinder() {
 	}
 	fmt.Println("------------ After Disjoint ------------")
 	paths = disjointPaths(paths)
-	// fmt.Println("\nShortest Paths:")
 	for _, path := range paths {
 		fmt.Printf("\nPath through room: %v ==> Path:%v", path[1], path) // Temporary check for paths
 	}

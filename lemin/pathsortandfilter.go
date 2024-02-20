@@ -49,38 +49,43 @@ func partition(paths [][]string) int {
 	return j // return index j
 }
 
-/* This function  */
+/* This function finds the disjoint paths, sorry for it being ineffecient and confusing 😂 */
 func disjointPaths(paths [][]string) [][]string {
-	var firstPath [][]string = [][]string{paths[0]}
-	roomsUsed := make(map[string]string, 0) //
-	for _, path := range paths{
+	var firstPath [][]string = [][]string{paths[0]} // saving for back up, you'll see why at the end of the function.
+	roomsUsed := make(map[string]string, 0) // Map to store the rooms used so far, for effeciency
+	for path1index, path := range paths{
 		for _, room := range path{
 			if room == Farm.startRoom || room == Farm.endRoom { // ignore start and end rooms
 				continue
 			}
+
+			// The searching part of this function. If room already found or just found now, delete it from the entire path and break
 			for path2index, path2 := range paths {
-				foundIntersection := false
+				if path1index == path2index {
+					continue
+				}
 				for _, room2 := range path2{
+					if room2 == Farm.startRoom || room2 == Farm.endRoom { // ignore start and end rooms
+						continue
+					}
 					if _, ok := roomsUsed[room2]; ok || room == room2 {
-						// fmt.Print(pathIndex, "\n", room, " ",room2, "\n")
-						foundIntersection = true
+						fmt.Println(room, " ", room2, "\tmap:", roomsUsed)
+						roomsUsed[room2] = ""
+						if path2index <= len(paths)-1{
+							paths = append(paths[:path2index], paths[path2index+1:]...)
+						} else { // this is for not going out of bounds with the +1
+							paths = paths[:path2index]
+						}
 						break
 					} 
 				}
-				if foundIntersection {
-					// fmt.Print("\n\nIteration:" , iteration, "\nPath2:", path2, "\nroomsUsed:", roomsUsed, "\n")
-					if path2index < len(paths)-1{
-						paths = append(paths[:path2index], paths[path2index+1:]...)
-					} else {
-						paths = paths[:path2index]
-						// disjointPaths = append(disjointPaths, path2)
-					}
-				}
-			roomsUsed[room] = ""
 			}
+			// adding room to the map 
+			roomsUsed[room] = ""
 		}
 	}
 	fmt.Print(roomsUsed)
+	// if the length of paths is 0, then just return the first path, this is done when all paths intersect, or just in case of anything going wrong.
 	if len(paths) == 0 {
 		return firstPath
 	}
