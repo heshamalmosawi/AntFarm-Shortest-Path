@@ -1,5 +1,9 @@
 package lemin
 
+import (
+	"fmt"
+)
+
 /* This function performs the Quick Sort Algorithm on the two-dimensional array consisting of paths,
 and sorts them in ascending order based on path length. */
 func QuickSort(paths [][]string) [][]string {
@@ -47,24 +51,38 @@ func partition(paths [][]string) int {
 
 /* This function  */
 func disjointPaths(paths [][]string) [][]string {
-	pathsFiltered := paths
-	// roomsUsed := make(map[string]string, 0) //
-	for i, path := range paths{
-		thisLoop:
+	var firstPath [][]string = [][]string{paths[0]}
+	roomsUsed := make(map[string]string, 0) //
+	for _, path := range paths{
 		for _, room := range path{
-			if i == 0 || i == len(path)-1{ // ignore start and end rooms
+			if room == Farm.startRoom || room == Farm.endRoom { // ignore start and end rooms
 				continue
 			}
-			for j := i+1; j < len(path); j++{
-				for _, compareroom := range paths[j]{
-					if room == compareroom {
-						pathsFiltered[len(pathsFiltered)-1], pathsFiltered[i] = pathsFiltered[i], pathsFiltered[len(pathsFiltered)-1]
-						pathsFiltered = pathsFiltered[:len(pathsFiltered)-1]
-						break thisLoop
+			for path2index, path2 := range paths {
+				foundIntersection := false
+				for _, room2 := range path2{
+					if _, ok := roomsUsed[room2]; ok || room == room2 {
+						// fmt.Print(pathIndex, "\n", room, " ",room2, "\n")
+						foundIntersection = true
+						break
+					} 
+				}
+				if foundIntersection {
+					// fmt.Print("\n\nIteration:" , iteration, "\nPath2:", path2, "\nroomsUsed:", roomsUsed, "\n")
+					if path2index < len(paths)-1{
+						paths = append(paths[:path2index], paths[path2index+1:]...)
+					} else {
+						paths = paths[:path2index]
+						// disjointPaths = append(disjointPaths, path2)
 					}
 				}
+			roomsUsed[room] = ""
 			}
 		}
 	}
-	return pathsFiltered
+	fmt.Print(roomsUsed)
+	if len(paths) == 0 {
+		return firstPath
+	}
+	return paths
 }

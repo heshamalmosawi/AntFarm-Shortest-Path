@@ -118,5 +118,5 @@ func ProcessData(d []string) {
 			Farm.AddConnection(from, to)
 		}
 	}
-	Farm.Print()
+	// Farm.Print()
 }
