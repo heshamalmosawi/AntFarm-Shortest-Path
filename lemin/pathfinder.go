@@ -16,14 +16,14 @@ func (g *Graph) PathFinder() {
 		fmt.Printf("Path through room: %v ==> Path:%v\n", path[1], path) // Temporary check for paths
 	}
 	paths = QuickSort(paths)
-	fmt.Println("------------ After sorting ------------")
+	fmt.Println("\n------------ After sorting ------------")
 	for _, path := range paths {
 		fmt.Printf("Path through room: %v ==> Path:%v\n", path[1], path) // Temporary check for paths
 	}
-	fmt.Println("------------ After Disjoint ------------")
+	fmt.Println("\n------------ After Disjoint ------------")
 	paths = disjointPaths(paths)
 	for _, path := range paths {
-		fmt.Printf("\nPath through room: %v ==> Path:%v", path[1], path) // Temporary check for paths
+		fmt.Printf("Path through room: %v ==> Path:%v\n", path[1], path) // Temporary check for paths
 	}
 	fmt.Println()
 }
