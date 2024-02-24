@@ -2,14 +2,14 @@ package lemin
 
 import (
 	"fmt"
+	"log"
 )
 
 func (g *Graph) PathFinder() {
 	paths := make([][]string, 0)
 	startVertex := g.findStartVertex()
 	if startVertex == nil {
-		fmt.Println("Start room not found")
-		return
+		log.Fatal("Start room not found")
 	}
 	g.findPaths(startVertex, []string{g.startRoom}, &paths)
 	for _, path := range paths {
