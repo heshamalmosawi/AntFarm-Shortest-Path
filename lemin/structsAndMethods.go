@@ -89,6 +89,10 @@ func (g *Graph) Remove(node *vertex) *Graph {
 	return thisGraph
 }
 
+/* 
+	This function creates a replicate graph and returns it. So far it is only used in the delete method.
+	The purpose of replicating is to be able to modify a graph without accidentally modifying the parent graph beacuse of pointer memory addresses.
+*/
 func (g *Graph) Replicate() *Graph {
 	newGraph := &Graph{
 		Vertices:  make([]*vertex, len(g.Vertices)),
