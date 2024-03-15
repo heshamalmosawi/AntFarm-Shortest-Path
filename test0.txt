@@ -15,6 +15,7 @@ c 8 1
 k 11 2
 ##end
 end 11 6
+start-h
 start-t
 n-e
 a-m
@@ -22,7 +23,6 @@ A-c
 0-o
 E-a
 k-end
-start-h
 o-n
 m-end
 t-E

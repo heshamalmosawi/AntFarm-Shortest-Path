@@ -12,19 +12,13 @@ func (g *Graph) PathFinder() {
 		log.Fatal("Start room not found")
 	}
 	g.findPaths(startVertex, []string{g.startRoom}, &paths)
-	for _, path := range paths {
-		fmt.Printf("Path through room: %v ==> Path:%v\n", path[1], path) // Temporary check for paths
-	}
 	paths = QuickSort(paths)
-	fmt.Println("\n------------ After sorting ------------")
-	for _, path := range paths {
-		fmt.Printf("Path through room: %v ==> Path:%v\n", path[1], path) // Temporary check for paths
-	}
-	fmt.Println("\n------------ After Disjoint ------------")
+	// fmt.Println("\n------------ After sorting ------------")
+	// for _, path := range paths {
+	// 	fmt.Printf("Path through room: %v ==> Path:%v\n", path[1], path) // Temporary check for paths
+	// }
+	g.optimalPath(paths)
 	paths = disjointPaths(paths)
-	for _, path := range paths {
-		fmt.Printf("Path through room: %v ==> Path:%v\n", path[1], path) // Temporary check for paths
-	}
 	fmt.Println()
 }
 
@@ -41,7 +35,7 @@ func (g *Graph) findStartVertex() *vertex {
 // findPaths recursively finds all paths from the current vertex.
 func (g *Graph) findPaths(v *vertex, path []string, paths *[][]string) {
 	if v.key == g.endRoom {
-		fmt.Printf("Path through room: %v ==> Path:%v\n", path[1], path) // Temporary check for paths
+		// fmt.Printf("Path through room: %v ==> Path:%v\n", path[1], path) // Temporary check for paths
 		*paths = append(*paths, path)
 		return
 	}
