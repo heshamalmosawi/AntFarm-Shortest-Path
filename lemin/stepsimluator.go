@@ -7,6 +7,7 @@ import (
 
 func (g *Graph) optimalPath(paths [][]string) {
 	x, _ := g.GetVertex(g.startRoom)
+	os.Exit(1)
 	mapping := make(map[string]int)
 	for _, node := range x.Connections { // step 1
 		fmt.Println(node.key)
@@ -65,23 +66,23 @@ func (g *Graph) stepSimulator(paths [][]string) int {
 // 	return x
 // }
 
-// func removeFromPath(paths [][]string, key string) [][]string{
-// 	var newpath [][]string
-// 	for _, path := range paths {
-// 		var found = false
-// 		for _, room := range path {
-// 			if room == key {
-// 				found = true
-// 				break
-// 			}
-// 		}
-// 		if !found {
-// 			newpath = append(newpath, path)
-// 		}
-// 	}
+func removeFromPath(paths [][]string, key string) [][]string{
+	var newpath [][]string
+	for _, path := range paths {
+		var found = false
+		for _, room := range path {
+			if room == key {
+				found = true
+				break
+			}
+		}
+		if !found {
+			newpath = append(newpath, path)
+		}
+	}
 
-// 	return newpath
-// }
+	return newpath
+}
 
 
 // func (g *Graph) stepSimulator(paths [][]string) int {
