@@ -91,12 +91,13 @@ func ProcessData(d []string) {
 				}
 				IsValidRoom(d, end) // Checking room format
 				Farm.endRoom = strings.Split(d[end], " ")[0]
+				foundEnd = true
 				continue
 			} else {
 				continue // According to the question requirements, all unknown commands should be ignored (in example: ##STOP, ##Hello etc.)
 			}
 		}
-
+	
 		// split lines to determine which lines are room and which ones are connections
 		// if len(splitline) > 1, line has room name, x coord, y coord
 		// else if len(splitline) = 1 and not empty, line is connection
@@ -120,6 +121,9 @@ func ProcessData(d []string) {
 			//create vertex connection
 			Farm.AddConnection(from, to)
 		}
+	}
+	if !foundEnd{
+		log.Fatal("ERROR: Invalid data format. No end room found")
 	}
 	// Farm.Print()
 }
