@@ -17,6 +17,9 @@ func main() {
 	}
 	contentArr := strings.Split(string(file), "\n")
 	lemin.ProcessData(contentArr)
-	lemin.Farm.ValidCoord()
+	err = lemin.Farm.ValidCoord()
+	if err != nil{
+		log.Fatal(err)
+	}
 	lemin.Farm.PathFinder()
 }
