@@ -2,23 +2,22 @@ package lemin
 
 import (
 	"fmt"
-	"os"
 )
 
 func (g *Graph) optimalPath(paths [][]string) {
 	x, _ := g.GetVertex(g.startRoom)
-	os.Exit(1)
 	mapping := make(map[string]int)
 	for _, node := range x.Connections { // step 1
-		fmt.Println(node.key)
+		// fmt.Println(node.key)
 		graph2 := g.Remove(node) // step 2
 		newPath := removeFromPath(paths, node.key) 
+		// newpath = path without selected node
 		numOfSteps := graph2.stepSimulator(newPath) //step 3
 		mapping[node.key] = numOfSteps
 		// graph2.Print()
-		fmt.Print(numOfSteps)
-		os.Exit(1)
+		// fmt.Println(numOfSteps)
 	}
+	fmt.Println(mapping)
 }
 
 func (g *Graph) stepSimulator(paths [][]string) int {
@@ -31,26 +30,33 @@ func (g *Graph) stepSimulator(paths [][]string) int {
 	antsplaced := 0
 	for antsplaced < g.ants {
 	 	for i, path := range paths {
-			// if len(path) + antsinpath[i] > len(paths[i+1]) + antsinpath[i+1]
+			// if len(path) + antsinpath[i] > len(paths[i+1]) + antsinpath[i+1]{}
 			// antsinpath[i+1]++
 			// break
 
-			if i != len(paths)-1 && counter[i] + len(path)-2 > len (paths[i+1]){
-				antsplaced++
-				counter[i]++
-			} else if i == len(paths)-1 && counter[i] + len(path)-2 > len (paths[i+1]){
+			if (i != len(paths)-1 && counter[i] + len(path) <= len (paths[i+1]) + counter[i+1]) || i == len(paths)-1{
 				antsplaced++
 				counter[i]++
 				break
-			}
-			fmt.Println(len(path), counter[i], i)
+			} 
+			// fmt.Println(len(path), counter[i], i)
 
 		}
 	}
-	fmt.Println("-------------")
-	fmt.Println(g.ants, "==" , antsplaced)
+
+	fmt.Print("The queue:" , counter)
+	fmt.Println("\n-------------")
+	fmt.Println("total ants: " , g.ants, "== ants placed:" , antsplaced)
+	
+	// finding how many steps it will take from maximum in counter (farthest ant)
+	max := counter[0]
+	for _, x := range counter{
+		if max < x {
+			max = x
+		}
+	}
 	// return 	stepForward(paths, counter)
-	return 0
+	return max
 
 }
 
@@ -83,34 +89,3 @@ func removeFromPath(paths [][]string, key string) [][]string{
 
 	return newpath
 }
-
-
-// func (g *Graph) stepSimulator(paths [][]string) int {
-// 	// fmt.Println("\n------------ Step Sim ------------")
-// 	for _, path := range paths {
-// 		fmt.Printf("Path through room: %v ==> Path:%v\n", path[1], path) // Temporary check for paths
-// 	}
-// 	antsRemainingInStart := g.ants
-// 	counter := make([]int, len(paths)) // to keep track of calculations
-// 	index := 0
-// 	steps := -1
-
-// 	for i := range antsRemainingInStart{
-// 		i = i;
-// 	}
-// 	for antsRemainingInStart != 0 {
-// 		steps++
-// 		counter = stepForward(antsRemainingInStart, paths, counter)
-// 		fmt.Println(len(paths[index])-2, "?:", counter[index])
-// 		if len(paths[index])-2 != counter[index]{
-// 			counter[index]++
-// 			antsRemainingInStart--
-// 			continue
-// 		}
-// 		if len(paths[index])-2 == counter[index]{
-// 			fmt.Println("ants at", index , ": ", counter[index])
-// 			break			
-// 		}
-// 	}
-// 	return 0
-// }
