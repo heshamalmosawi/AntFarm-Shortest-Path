@@ -1,7 +1,6 @@
 package lemin
 
 import (
-	"errors"
 	"fmt"
 	"log"
 	"strings"
@@ -53,7 +52,7 @@ func (g *Graph) ValidCoord() error{
 	for _, elem := range g.Vertices {
 		for _, elem2 := range g.Vertices {
 			if elem.key != elem2.key && elem.coord_x == elem2.coord_x && elem.coord_y == elem2.coord_y {
-				return errors.New(fmt.Sprintf("ERROR: Invalid data. Two or more vertices have matching coordinates \n[%v and %v]", elem.key, elem2.key))
+				return fmt.Errorf("ERROR: Invalid data. Two or more vertices have matching coordinates \n[%v and %v]", elem.key, elem2.key)
 			}
 		}
 	}
