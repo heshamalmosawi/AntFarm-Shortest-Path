@@ -49,9 +49,9 @@ func (g *Graph) stepSimulator(paths [][]string) int {
 	fmt.Println("total ants: " , g.ants, "== ants placed:" , antsplaced)
 	
 	// finding how many steps it will take from maximum in counter (farthest ant)
-	max := counter[0]
-	for _, x := range counter{
-		if max < x {
+	max := counter[0] + len(paths[0])
+	for i, x := range counter{
+		if max < x + len(paths[i]) {
 			max = x
 		}
 	}
