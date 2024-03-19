@@ -18,6 +18,6 @@ func main() {
 	}
 	contentArr := strings.Split(string(file), "\n")
 	lemin.ProcessData(contentArr)
-	lemin.Farm.ValidCoord()
-	lemin.Farm.PathFinder()
+	// lemin.Farm.ValidCoord()
+	// lemin.Farm.PathFinder()
 }
