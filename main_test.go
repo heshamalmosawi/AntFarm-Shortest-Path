@@ -2,6 +2,7 @@ package main
 
 import (
 	"lemin/lemin"
+	"reflect"
 	"testing"
 )
 
@@ -44,4 +45,32 @@ func TestValidCoord(t *testing.T) {
             t.Errorf("Expected error message '%s' but got '%s'", expectedErrorMessage, err.Error())
         }
     }
+}
+
+func TestRemovefrompath(t *testing.T){
+	path := []string{"0", "2", "3", "1"}
+	paths := [][]string{path}
+	returned := lemin.RemoveFromPath(paths, "2")
+	if len(returned) != 0 {
+		t.Errorf("Removefrompath return value expected 0 but got %v", returned)
+	}
+	paths = [][]string{
+		{"A", "B", "C", "D"},
+		{"X", "Y", "Z"},
+		{"M", "N", "O", "P", "Q"},
+	}
+
+	// Remove room "B" from all paths
+	returned = lemin.RemoveFromPath(paths, "B")
+
+	expected := [][]string{
+		{"X", "Y", "Z"},
+		{"M", "N", "O", "P", "Q"},
+	}
+
+	// Check if the returned value matches the expected value
+	if !reflect.DeepEqual(returned, expected) {
+		t.Errorf("Removefrompath return value expected %v but got %v", expected, returned)
+	}
+
 }

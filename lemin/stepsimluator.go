@@ -10,7 +10,10 @@ func (g *Graph) optimalPath(paths [][]string) {
 	for _, node := range x.Connections { // step 1
 		// fmt.Println(node.key)
 		graph2 := g.Remove(node) // step 2
-		newPath := removeFromPath(paths, node.key) 
+		newPath := RemoveFromPath(paths, node.key) 
+		if len(newPath) == 0 {
+			continue
+		}
 		// newpath = path without selected node
 		numOfSteps := graph2.stepSimulator(newPath) //step 3
 		mapping[node.key] = numOfSteps
@@ -72,7 +75,7 @@ func (g *Graph) stepSimulator(paths [][]string) int {
 // 	return x
 // }
 
-func removeFromPath(paths [][]string, key string) [][]string{
+func RemoveFromPath(paths [][]string, key string) [][]string{
 	var newpath [][]string
 	for _, path := range paths {
 		var found = false
