@@ -1,10 +1,11 @@
 package main
 
 import (
-	lemin "lemin/lemin"
+	"lemin/lemin"
 	"log"
 	"os"
 	"strings"
+	// lemin "lemin/lemin"
 )
 
 func main() {
@@ -21,5 +22,24 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	lemin.Farm.PathFinder()
+	// lemin.Farm.PathFinder()
+
+	// example00
+	// paths := [][]string{
+	// 	{"start", "2", "3", "1", "end"},
+	// }
+
+	// example01
+	// var paths = [][]string{
+	// 	{"start", "t", "E", "a", "m", "end"},
+	// 	{"start", "h", "A", "c", "k", "end"},
+	// 	{"start", "0", "o", "n", "e", "end"},
+	// }
+
+	// example01
+	paths := [][]string{
+		{"start", "3", "end"},
+		{"start", "1", "2", "3", "end"},
+	}
+	lemin.Farm.PathWalker(paths)
 }
