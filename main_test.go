@@ -6,11 +6,11 @@ import (
 	"testing"
 )
 
-func TestMain(m *testing.M){
+func TestMain(m *testing.M) {
 	m.Run()
 }
 
-func TestProcessData(t *testing.T){
+func TestProcessData(t *testing.T) {
 	input := []string{
 		"10",
 		"##start",
@@ -25,29 +25,29 @@ func TestProcessData(t *testing.T){
 }
 
 func TestValidCoord(t *testing.T) {
-    // Prepare test data with duplicate coordinates
-    graph := &lemin.Graph{}
+	// Prepare test data with duplicate coordinates
+	graph := &lemin.Graph{}
 	err := graph.Addvertex("room1", "1", "2")
 	err1 := graph.Addvertex("room2", "2", "2")
 	err2 := graph.Addvertex("room3", "2", "2")
 	if err != nil || err1 != nil || err2 != nil {
 		t.Error("Error adding vertex")
 	}
-    // Call the method being tested
-    err = graph.ValidCoord()
+	// Call the method being tested
+	err = graph.ValidCoord()
 
-    // Check if error is returned as expected
-    if err == nil {
-        t.Error("Expected error but got nil")
-    } else {
-        expectedErrorMessage := "ERROR: Invalid data. Two or more vertices have matching coordinates \n[room2 and room3]"
-        if err.Error() != expectedErrorMessage {
-            t.Errorf("Expected error message '%s' but got '%s'", expectedErrorMessage, err.Error())
-        }
-    }
+	// Check if error is returned as expected
+	if err == nil {
+		t.Error("Expected error but got nil")
+	} else {
+		expectedErrorMessage := "ERROR: Invalid data. Two or more vertices have matching coordinates \n[room2 and room3]"
+		if err.Error() != expectedErrorMessage {
+			t.Errorf("Expected error message '%s' but got '%s'", expectedErrorMessage, err.Error())
+		}
+	}
 }
 
-func TestRemovefrompath(t *testing.T){
+func TestRemovefrompath(t *testing.T) {
 	path := []string{"0", "2", "3", "1"}
 	paths := [][]string{path}
 	returned := lemin.RemoveFromPath(paths, "2")
@@ -73,4 +73,25 @@ func TestRemovefrompath(t *testing.T){
 		t.Errorf("Removefrompath return value expected %v but got %v", expected, returned)
 	}
 
+}
+
+func TestGenerateCombinations(t *testing.T) {
+	paths := [][]string{
+		{"A", "B", "C", "D"},
+		{"X", "A", "Z"},
+		{"M", "N", "O", "P", "Q"},
+	}
+	visited := make(map[string]bool)
+	result := lemin.GenerateCombinations(paths, visited)
+	expected := [][][]string{
+		{{"A", "B", "C", "D"}},
+		{{"A", "B", "C", "D"}, {"M", "N", "O", "P", "Q"}},
+		{{"M", "N", "O", "P", "Q"}},
+	}
+	if reflect.TypeOf(result) != reflect.TypeOf(expected) {
+		t.Errorf("Generate combinations return type expected [][][]string but got %v", reflect.TypeOf(result))
+	}
+	if reflect.DeepEqual(result, expected) {
+		t.Errorf("Generated combination return value expected %v but got %v", expected, result)
+	}
 }

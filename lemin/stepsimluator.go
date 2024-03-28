@@ -2,25 +2,46 @@ package lemin
 
 import (
 	"fmt"
+	"math"
 )
 
+/* This function finds the optimal path to use then proceeds to call the printsteps function to walk the steps and print them. */
 func (g *Graph) optimalPath(paths [][]string) {
-	x, _ := g.GetVertex(g.startRoom)
-	mapping := make(map[string]int)
-	for _, node := range x.Connections { // step 1
-		// fmt.Println(node.key)
-		graph2 := g.Remove(node) // step 2
-		newPath := RemoveFromPath(paths, node.key) 
-		if len(newPath) == 0 {
-			continue
-		}
-		// newpath = path without selected node
-		numOfSteps := graph2.stepSimulator(newPath) //step 3
-		mapping[node.key] = numOfSteps
-		// graph2.Print()
-		// fmt.Println(numOfSteps)
+	// fmt.Println("\n\n", (paths), "\n\n")
+
+	visited := make(map[string]bool) 
+	combinations := GenerateCombinations(paths, visited)
+	fmt.Println("\n-combination done-\n")
+	fmt.Println("length:", len(combinations))
+	if len(combinations) == 0 {
+		fmt.Println(paths)
 	}
-	fmt.Println(mapping)
+	for i := range combinations{
+		combinations[i] = disjointPaths(combinations[i])
+		fmt.Println("\n\n\n", combinations[i])
+	}
+	combinations = removeDuplicates(combinations)
+	mapping := make([]int, len(combinations))
+
+		for i := range combinations  { // step 1
+			fmt.Println("\033[34m", combinations[i], "\033[0m")
+			
+			mapping[i] = g.stepSimulator(combinations[i]) //step 3
+			// graph2.Print()
+			// fmt.Println(numOfSteps)
+		}
+		// fmt.Println(mapping)
+		var minIndex int
+		minValue := math.MaxInt64
+		for index, value := range mapping {
+			if value < minValue {
+				minIndex = index
+				minValue = value
+			}
+		}
+		fmt.Println("::", len(mapping), "::", len(combinations))
+		fmt.Println("--", mapping[minIndex], ": ", combinations[minIndex])
+
 }
 
 func (g *Graph) stepSimulator(paths [][]string) int {
@@ -32,29 +53,29 @@ func (g *Graph) stepSimulator(paths [][]string) int {
 	counter := make([]int, len(paths)) // to keep track of calculations
 	antsplaced := 0
 	for antsplaced < g.ants {
-	 	for i, path := range paths {
+		for i, path := range paths {
 			// if len(path) + antsinpath[i] > len(paths[i+1]) + antsinpath[i+1]{}
 			// antsinpath[i+1]++
 			// break
 
-			if (i != len(paths)-1 && counter[i] + len(path) <= len (paths[i+1]) + counter[i+1]) || i == len(paths)-1{
+			if (i != len(paths)-1 && counter[i]+len(path) <= len(paths[i+1])+counter[i+1]) || i == len(paths)-1{
 				antsplaced++
 				counter[i]++
 				break
-			} 
+			}
 			// fmt.Println(len(path), counter[i], i)
 
 		}
 	}
 
-	fmt.Print("The queue:" , counter)
+	fmt.Print("The queue:", counter)
 	fmt.Println("\n-------------")
-	fmt.Println("total ants: " , g.ants, "== ants placed:" , antsplaced)
-	
+	fmt.Println("total ants: ", g.ants, "== ants placed:", antsplaced)
+
 	// finding how many steps it will take from maximum in counter (farthest ant)
 	max := counter[0] + len(paths[0])
-	for i, x := range counter{
-		if max < x + len(paths[i]) {
+	for i, x := range counter {
+		if max < x+len(paths[i]) {
 			max = x
 		}
 	}
@@ -63,19 +84,8 @@ func (g *Graph) stepSimulator(paths [][]string) int {
 
 }
 
-// func stepForward(paths [][]string, counter []int) int{
-// 	x := 0
-// 	for i, path := range paths{
-// 		if len(path) - 2 != counter[i]{ 
-// 			counter[i]++
-// 			// break
-// 		}
-// 		x = i
-// 	}
-// 	return x
-// }
-
-func RemoveFromPath(paths [][]string, key string) [][]string{
+/* This function removes any path containing the vertex passed as parameter. */
+func RemoveFromPath(paths [][]string, key string) [][]string {
 	var newpath [][]string
 	for _, path := range paths {
 		var found = false
@@ -91,4 +101,69 @@ func RemoveFromPath(paths [][]string, key string) [][]string{
 	}
 
 	return newpath
+}
+
+func GenerateCombinations(paths[][]string, visitedRooms map[string]bool) [][][]string{
+	fmt.Print("length of paths", len(paths), paths)
+	if len(paths) == 1 {
+		for i, room := range paths[0]{
+			if i == 0 || i == len(paths[0])-1 {
+				continue
+			}
+			if visitedRooms[room] {
+				return nil
+			}
+		}
+		return [][][]string{paths}
+	}
+	firstPath := paths[0]
+	// tester := false
+	for _, room := range firstPath{
+		if visitedRooms[room] {
+			return GenerateCombinations(paths[1:], visitedRooms)
+		// break
+		}
+		// visitedRooms[room] = true
+	}
+	// if tester {
+		// for _, room := range firstPath{
+		// 	if visitedRooms[room]{
+		// 		visitedRooms[room] = false
+		// 	}
+		// }
+		// return GenerateCombinations(paths[1:], visitedRooms)
+	// }
+	// fmt.Println(paths)
+	combsWithoutFirst := GenerateCombinations(paths[1:], visitedRooms)
+	if combsWithoutFirst == nil {
+		return [][][]string{{firstPath}}
+	}
+	// fmt.Print("\x1b[34m", len(combsWithoutFirst), "\x1b[0m")
+
+	allCombsWithFirst := [][][]string{}
+	for i := range combsWithoutFirst{
+		oneCombWithFirst := append([][]string{firstPath}, combsWithoutFirst[i]...)
+		allCombsWithFirst = append(allCombsWithFirst, oneCombWithFirst)
+	}
+	fmt.Print(len(allCombsWithFirst))
+	if len(allCombsWithFirst) > 0 {
+		return append(combsWithoutFirst, allCombsWithFirst...)
+	} else {
+		return combsWithoutFirst
+	}
+}
+
+func removeDuplicates(input [][][]string) [][][]string {
+    uniqueMap := make(map[string]bool)
+    var result [][][]string
+
+    for _, arr := range input {
+        arrString := fmt.Sprintf("%v", arr)
+        if !uniqueMap[arrString] {
+            uniqueMap[arrString] = true
+            result = append(result, arr)
+        }
+    }
+
+    return result
 }
