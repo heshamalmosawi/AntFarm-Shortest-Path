@@ -81,8 +81,8 @@ func TestGenerateCombinations(t *testing.T) {
 		{"X", "A", "Z"},
 		{"M", "N", "O", "P", "Q"},
 	}
-	visited := make(map[string]bool)
-	result := lemin.GenerateCombinations(paths, visited)
+	var result = [][][]string{}
+	lemin.GenerateCombinations(paths, &result)
 	expected := [][][]string{
 		{{"A", "B", "C", "D"}},
 		{{"A", "B", "C", "D"}, {"M", "N", "O", "P", "Q"}},
