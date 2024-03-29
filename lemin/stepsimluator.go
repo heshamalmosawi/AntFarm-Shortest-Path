@@ -7,21 +7,16 @@ import (
 
 /* This function finds the optimal path to use then proceeds to call the printsteps function to walk the steps and print them. */
 func (g *Graph) optimalPath(paths [][]string) {
-	// fmt.Println("\n\n", (paths), "\n\n")
 	if len(paths) > 20 {
 		paths = paths[:15]
 	}
-	visited := make(map[string]bool) 
-	combinations := GenerateCombinations(paths, visited)
+	var combinations = [][][]string{}
+	GenerateCombinations(paths, &combinations)
 	fmt.Println("\n-combination done-\n")
-	fmt.Println("length:", len(combinations))
 	if len(combinations) == 0 {
 		fmt.Println(paths)
 	}
-	for i := range combinations{
-		combinations[i] = disjointPaths(combinations[i])
-		fmt.Println("\n\n\n", combinations[i])
-	}
+	
 	combinations = removeDuplicates(combinations)
 	mapping := make([]int, len(combinations))
 
@@ -105,27 +100,29 @@ func RemoveFromPath(paths [][]string, key string) [][]string {
 	return newpath
 }
 
-func GenerateCombinations(paths[][]string, visitedRooms map[string]bool) [][][]string{
+func GenerateCombinations(paths[][]string, result *[][][]string){
 	if len(paths) == 1 {
-		return [][][]string{paths}
+		*result  = append(*result, paths)
+		return
 	}
 	firstPath := paths[0]
-	
-	combsWithoutFirst := GenerateCombinations(paths[1:], visitedRooms)
+	combsWithoutFirst := [][][]string{}
+	GenerateCombinations(paths[1:], &combsWithoutFirst)
 	if combsWithoutFirst == nil {
-		return [][][]string{{firstPath}}
+		*result = append(*result, [][]string{firstPath})
+		return
 	}
 
 	allCombsWithFirst := [][][]string{}
 	for i := range combsWithoutFirst{
-		oneCombWithFirst := append([][]string{firstPath}, combsWithoutFirst[i]...)
-		allCombsWithFirst = append(allCombsWithFirst, oneCombWithFirst)
+		allCombsWithFirst = append(allCombsWithFirst, append([][]string{firstPath}, combsWithoutFirst[i]...))
+		allCombsWithFirst[len(allCombsWithFirst)-1] = disjointPaths(allCombsWithFirst[len(allCombsWithFirst)-1])
 	}
-	fmt.Print(len(allCombsWithFirst))
 	if len(allCombsWithFirst) > 0 {
-		return append(combsWithoutFirst, allCombsWithFirst...)
+		*result = append(*result, combsWithoutFirst...)
+		*result = append(*result, allCombsWithFirst...)
 	} else {
-		return combsWithoutFirst
+		*result = append(*result, combsWithoutFirst...)
 	}
 }
 
