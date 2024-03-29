@@ -8,7 +8,9 @@ import (
 /* This function finds the optimal path to use then proceeds to call the printsteps function to walk the steps and print them. */
 func (g *Graph) optimalPath(paths [][]string) {
 	// fmt.Println("\n\n", (paths), "\n\n")
-
+	if len(paths) > 20 {
+		paths = paths[:15]
+	}
 	visited := make(map[string]bool) 
 	combinations := GenerateCombinations(paths, visited)
 	fmt.Println("\n-combination done-\n")
@@ -104,41 +106,15 @@ func RemoveFromPath(paths [][]string, key string) [][]string {
 }
 
 func GenerateCombinations(paths[][]string, visitedRooms map[string]bool) [][][]string{
-	fmt.Print("length of paths", len(paths), paths)
 	if len(paths) == 1 {
-		for i, room := range paths[0]{
-			if i == 0 || i == len(paths[0])-1 {
-				continue
-			}
-			if visitedRooms[room] {
-				return nil
-			}
-		}
 		return [][][]string{paths}
 	}
 	firstPath := paths[0]
-	// tester := false
-	for _, room := range firstPath{
-		if visitedRooms[room] {
-			return GenerateCombinations(paths[1:], visitedRooms)
-		// break
-		}
-		// visitedRooms[room] = true
-	}
-	// if tester {
-		// for _, room := range firstPath{
-		// 	if visitedRooms[room]{
-		// 		visitedRooms[room] = false
-		// 	}
-		// }
-		// return GenerateCombinations(paths[1:], visitedRooms)
-	// }
-	// fmt.Println(paths)
+	
 	combsWithoutFirst := GenerateCombinations(paths[1:], visitedRooms)
 	if combsWithoutFirst == nil {
 		return [][][]string{{firstPath}}
 	}
-	// fmt.Print("\x1b[34m", len(combsWithoutFirst), "\x1b[0m")
 
 	allCombsWithFirst := [][][]string{}
 	for i := range combsWithoutFirst{
