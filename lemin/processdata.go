@@ -44,6 +44,8 @@ func ProcessData(d []string) {
 
 	if foundAnts && Farm.ants <= 0 {
 		log.Fatal("Invalid data! Not enough ants in the colony.")
+	} else if Farm.ants > 5000 {
+		log.Fatal("Invalid data! Too many ants in the colony.")
 	}
 	// Loop for graph structuring
 	for i, line := range d {
