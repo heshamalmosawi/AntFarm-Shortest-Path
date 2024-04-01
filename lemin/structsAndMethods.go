@@ -18,7 +18,7 @@ type vertex struct {
 	coord_x     string
 	coord_y     string
 	Connections []*vertex
-	antInRoom 	[1]string
+	antInRoom   [1]string
 }
 
 func (g *Graph) Addvertex(key string, x, y string) error {
@@ -90,9 +90,9 @@ func (g *Graph) Remove(node *vertex) *Graph {
 	return thisGraph
 }
 
-/* 
-	This function creates a replicate graph and returns it. So far it is only used in the delete method.
-	The purpose of replicating is to be able to modify a graph without accidentally modifying the parent graph beacuse of pointer memory addresses.
+/*
+This function creates a replicate graph and returns it. So far it is only used in the delete method.
+The purpose of replicating is to be able to modify a graph without accidentally modifying the parent graph beacuse of pointer memory addresses.
 */
 func (g *Graph) Replicate() *Graph {
 	newGraph := &Graph{
@@ -126,6 +126,7 @@ func (g *Graph) Replicate() *Graph {
 	return newGraph
 }
 
+// This method prints a graph and all its contents.
 func (g *Graph) Print() {
 	fmt.Println("Ants:", g.ants, "Start:", g.startRoom, "End:", g.endRoom)
 	for _, v := range g.Vertices {

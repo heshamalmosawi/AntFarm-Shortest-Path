@@ -48,7 +48,7 @@ func IsValidRoom(arr []string, index int) {
 }
 
 /* This functions throws an error if two rooms have the same exact coordinates */
-func (g *Graph) ValidCoord() error{
+func (g *Graph) ValidCoord() error {
 	for _, elem := range g.Vertices {
 		for _, elem2 := range g.Vertices {
 			if elem.key != elem2.key && elem.coord_x == elem2.coord_x && elem.coord_y == elem2.coord_y {
@@ -60,13 +60,13 @@ func (g *Graph) ValidCoord() error{
 }
 
 /* This function takes a graph and set of paths, and returns the appropriate queues for maximum flow for the given number of ants. */
-func (g Graph) makeQueue(paths [][]string) []int{
+func (g Graph) makeQueue(paths [][]string) []int {
 	counter := make([]int, len(paths)) // to keep track of calculations
 	antsplaced := 0
 	for antsplaced < g.ants {
 		for i, path := range paths {
 
-			if (i != len(paths)-1 && counter[i]+len(path) <= len(paths[i+1])+counter[i+1]) || i == len(paths)-1{
+			if (i != len(paths)-1 && counter[i]+len(path) <= len(paths[i+1])+counter[i+1]) || i == len(paths)-1 {
 				antsplaced++
 				counter[i]++
 				break
@@ -74,8 +74,5 @@ func (g Graph) makeQueue(paths [][]string) []int{
 
 		}
 	}
-	// fmt.Print("The queue:", counter)
-	// fmt.Println("\n-------------")
-	// fmt.Println("total ants: ", g.ants, "== ants placed:", antsplaced)
 	return counter
 }

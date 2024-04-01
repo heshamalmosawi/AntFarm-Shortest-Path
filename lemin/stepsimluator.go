@@ -12,42 +12,33 @@ func (g *Graph) optimalPath(paths [][]string) {
 	}
 	var combinations = [][][]string{}
 	GenerateCombinations(paths, &combinations)
-	fmt.Println("\n-combination done-\n")
-	if len(combinations) == 0 {
-		fmt.Println(paths)
-	}
-	
+
 	combinations = removeDuplicates(combinations)
 	mapping := make([]int, len(combinations))
 
-		for i := range combinations  { // step 1
-			// fmt.Println("\033[34m", combinations[i], "\033[0m")
-			
-			mapping[i] = g.stepSimulator(combinations[i]) //step 3
-			// graph2.Print()
-			// fmt.Println(numOfSteps)
+	for i := range combinations {
+		// simulating the number of steps needed then adding it to the map (weird name choice, i know)
+		mapping[i] = g.stepSimulator(combinations[i])
+	}
+
+	// finding the path with the least number of steps needed.
+	var minIndex int
+	minValue := math.MaxInt64
+	for index, value := range mapping {
+		if value < minValue {
+			minIndex = index
+			minValue = value
 		}
-		// fmt.Println(mapping)
-		var minIndex int
-		minValue := math.MaxInt64
-		for index, value := range mapping {
-			if value < minValue {
-				minIndex = index
-				minValue = value
-			}
-		}
-		// fmt.Println("::", len(mapping), "::", len(combinations))
-		fmt.Println("--", mapping[minIndex], ": ", combinations[minIndex])
-		g.walkIt(combinations[minIndex])
+	}
+	g.walkIt(combinations[minIndex])
 
 }
 
+/*
+This function checks how many steps it would take for the farthest ant to cross and returns that number. the result is two more
+than the real number but it doesnt make a difference in the comparisions to subtract 2 from all results.
+*/
 func (g *Graph) stepSimulator(paths [][]string) int {
-	// fmt.Println("\n------------ Step Sim ------------")
-	// for _, path := range paths {
-	// 	fmt.Printf("Path through room: %v ==> Path:%v\n", path[1], path) // Temporary check for paths
-	// }
-
 	counter := g.makeQueue(paths)
 
 	// finding how many steps it will take from maximum in counter (farthest ant)
@@ -57,7 +48,6 @@ func (g *Graph) stepSimulator(paths [][]string) int {
 			max = x
 		}
 	}
-	// return 	stepForward(paths, counter)
 	return max
 
 }
@@ -81,9 +71,10 @@ func RemoveFromPath(paths [][]string, key string) [][]string {
 	return newpath
 }
 
-func GenerateCombinations(paths[][]string, result *[][][]string){
+/* This function takes in a 2D array of paths, and appends all possible combinations to the result 3d array. */
+func GenerateCombinations(paths [][]string, result *[][][]string) {
 	if len(paths) == 1 {
-		*result  = append(*result, paths)
+		*result = append(*result, paths)
 		return
 	}
 	firstPath := paths[0]
@@ -95,7 +86,7 @@ func GenerateCombinations(paths[][]string, result *[][][]string){
 	}
 
 	allCombsWithFirst := [][][]string{}
-	for i := range combsWithoutFirst{
+	for i := range combsWithoutFirst {
 		allCombsWithFirst = append(allCombsWithFirst, append([][]string{firstPath}, combsWithoutFirst[i]...))
 		allCombsWithFirst[len(allCombsWithFirst)-1] = disjointPaths(allCombsWithFirst[len(allCombsWithFirst)-1])
 	}
@@ -107,17 +98,21 @@ func GenerateCombinations(paths[][]string, result *[][][]string){
 	}
 }
 
+/*
+This function takes in a 3d array, checks if any of the elements is repeated and returns the 3d array without them.
+It is not necessary and probably useless but this function is implemented just in case there was any error made.
+*/
 func removeDuplicates(input [][][]string) [][][]string {
-    uniqueMap := make(map[string]bool)
-    var result [][][]string
+	uniqueMap := make(map[string]bool)
+	var result [][][]string
 
-    for _, arr := range input {
-        arrString := fmt.Sprintf("%v", arr)
-        if !uniqueMap[arrString] {
-            uniqueMap[arrString] = true
-            result = append(result, arr)
-        }
-    }
+	for _, arr := range input {
+		arrString := fmt.Sprintf("%v", arr)
+		if !uniqueMap[arrString] {
+			uniqueMap[arrString] = true
+			result = append(result, arr)
+		}
+	}
 
-    return result
+	return result
 }

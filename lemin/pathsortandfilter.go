@@ -1,8 +1,8 @@
 package lemin
 
 /*
-	This function performs the Quick Sort Algorithm on the two-dimensional array consisting of paths,
-	and sorts them in ascending order based on path length.
+This function performs the Quick Sort Algorithm on the two-dimensional array consisting of paths,
+and sorts them in ascending order based on path length.
 */
 func QuickSort(paths [][]string) [][]string {
 	// stopping condition for the end of the recursion, if the length is 0 or 1, it will return itself.
@@ -18,8 +18,10 @@ func QuickSort(paths [][]string) [][]string {
 	return append(append(lower, paths[pivot]), higher...) // combining all in one line for shorter code
 }
 
-/*	This function selects a pivot element, places the elements with lower length than the pivot on the left side of the pivot and
-	the elements with bigger length on the right side.*/
+/*
+This function selects a pivot element, places the elements with lower length than the pivot on the left side of the pivot and
+the elements with bigger length on the right side.
+*/
 func partition(paths [][]string) int {
 	pivot := len(paths[0])  // choosing first element as the 'pivot'
 	i, j := 1, len(paths)-1 // saving the index of the first and last element to use as "pointers" (not really pointers)
