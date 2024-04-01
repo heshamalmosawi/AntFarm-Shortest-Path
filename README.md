@@ -20,7 +20,10 @@ go run main.go <file_name>
 ```
 
 ## Input file format
-- tbc
+- Start with ant number on first line
+- On one line each, list rooms as [ <room_name> <coordinate on x-axis> <coordinate on y-axis> ].
+- Have two rooms as start and ending rooms, they can be stated with ##start or ##end on the previous line.
+- State all connections or tunnel between rooms by typing on each line <room_A>-<room_B>. Direction doesnt matter as it is bidirectional.
 
 ## Contributors
 - [Sayed Hesham Husain](https://github.com/heshamalmosawi)
