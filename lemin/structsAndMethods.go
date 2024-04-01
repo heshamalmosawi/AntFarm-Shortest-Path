@@ -18,6 +18,7 @@ type vertex struct {
 	coord_x     string
 	coord_y     string
 	Connections []*vertex
+	antInRoom 	[1]string
 }
 
 func (g *Graph) Addvertex(key string, x, y string) error {

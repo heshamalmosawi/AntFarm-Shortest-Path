@@ -58,3 +58,24 @@ func (g *Graph) ValidCoord() error{
 	}
 	return nil
 }
+
+/* This function takes a graph and set of paths, and returns the appropriate queues for maximum flow for the given number of ants. */
+func (g Graph) makeQueue(paths [][]string) []int{
+	counter := make([]int, len(paths)) // to keep track of calculations
+	antsplaced := 0
+	for antsplaced < g.ants {
+		for i, path := range paths {
+
+			if (i != len(paths)-1 && counter[i]+len(path) <= len(paths[i+1])+counter[i+1]) || i == len(paths)-1{
+				antsplaced++
+				counter[i]++
+				break
+			}
+
+		}
+	}
+	// fmt.Print("The queue:", counter)
+	// fmt.Println("\n-------------")
+	// fmt.Println("total ants: ", g.ants, "== ants placed:", antsplaced)
+	return counter
+}

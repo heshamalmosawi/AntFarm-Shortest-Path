@@ -13,10 +13,10 @@ func (g *Graph) PathFinder() {
 	}
 	g.findPaths(startVertex, []string{g.startRoom}, &paths)
 	paths = QuickSort(paths)
-	fmt.Println("\n------------ After sorting ------------")
-	for _, path := range paths {
-		fmt.Printf("Path through room: %v ==> Path:%v\n", path[1], path) // Temporary check for paths
-	}
+	// fmt.Println("\n------------ After sorting ------------")
+	// for _, path := range paths {
+	// 	fmt.Printf("Path through room: %v ==> Path:%v\n", path[1], path) // Temporary check for paths
+	// }
 	// paths = disjointPaths(paths) //
 	g.optimalPath(paths)
 	fmt.Println()

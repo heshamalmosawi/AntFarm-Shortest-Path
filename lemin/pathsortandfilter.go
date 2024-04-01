@@ -10,13 +10,11 @@ func QuickSort(paths [][]string) [][]string {
 		return paths
 	}
 
-	// Farm.Print()
 	// calling the partition function that would put the pivot in its place and return its index for partitioning/dividing the recursion input
 	pivot := partition(paths)
 	// partitioning/dividing the recursion input arrays
 	lower := QuickSort(paths[:pivot])
 	higher := QuickSort(paths[pivot+1:])
-	// Farm.test()
 	return append(append(lower, paths[pivot]), higher...) // combining all in one line for shorter code
 }
 
