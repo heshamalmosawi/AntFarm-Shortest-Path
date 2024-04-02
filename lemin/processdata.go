@@ -31,6 +31,9 @@ func ProcessData(d []string) {
 			indexOfAnts = i
 			continue
 		}
+		if numErr, ok := err.(*strconv.NumError); ok && numErr.Err == strconv.ErrRange {
+			log.Fatal("ERROR: Invalid data format. Too many or too few ants")
+		}
 		// If start or end is found before num of ants, then the data format is invalid.
 		temp := strings.ToLower(line)
 		if temp == "##start" || temp == "##end" {
