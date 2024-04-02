@@ -8,9 +8,12 @@ func (g *Graph) PathFinder() {
 	paths := make([][]string, 0)
 	startVertex := g.findStartVertex()
 	if startVertex == nil {
-		log.Fatal("Start room not found")
+		log.Fatal("ERROR: Start room not found")
 	}
 	g.findPaths(startVertex, []string{g.startRoom}, &paths)
+	if len(paths) == 0 {
+		log.Fatal("ERROR: Invalid data! There does not exist a path between the start and end room.")
+	}
 	paths = QuickSort(paths)
 	g.optimalPath(paths)
 }
