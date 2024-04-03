@@ -19,7 +19,6 @@ func (g *Graph) walkIt(paths [][]string) {
 	antsRemaining := g.ants
 	for antsRemaining > 0 {
 		antsRemaining = g.stepForward(paths, queue, antsWithNum, antsRemaining)
-
 	}
 	fmt.Println()
 }
@@ -38,6 +37,7 @@ func (g Graph) stepForward(paths [][]string, queue []int, antsWithNum map[string
 		if node.antInRoom[0] != "" { // if second to last room is not empty
 			fmt.Print(node.antInRoom[0], "-", paths[i][len(paths[i])-1], " ")
 			antsWithNum[node.antInRoom[0]] = "end"
+			antsRemaining--
 			node.antInRoom[0] = "" // freeing up the room
 			needforNewLine = true
 		}
@@ -67,10 +67,10 @@ func (g Graph) stepForward(paths [][]string, queue []int, antsWithNum map[string
 			node.antInRoom[0] = temp
 			antsWithNum[temp] = node.antInRoom[0]
 			fmt.Print(node.antInRoom[0], "-", node.key, " ")
-			antsRemaining--
 			queue[i]--
 			if paths[i][1] == g.endRoom { // if the first room is also the end room, then we need to free it up immediately
 				antsWithNum[node.antInRoom[0]] = "end"
+				antsRemaining--
 				node.antInRoom[0] = "" // freeing up the room
 			}
 			needforNewLine = true
